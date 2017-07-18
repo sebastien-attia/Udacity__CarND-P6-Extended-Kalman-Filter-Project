@@ -3,6 +3,9 @@
 
 # build files
 build/
+.cproject
+.project
+.settings/
 
 # editor config
 .vscode/
