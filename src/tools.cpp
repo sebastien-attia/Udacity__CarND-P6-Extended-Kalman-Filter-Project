@@ -13,7 +13,6 @@ Tools::~Tools() {}
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
   /**
-  TODO:
     * Calculate the RMSE here.
   */
   VectorXd rmse(4);
@@ -41,29 +40,26 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 	rmse = rmse/estimations.size();
 
 	//calculate the squared root
-	rmse = rmse.array().sqrt();
-
-	//return the result
-	return rmse;
-
+	return rmse.array().sqrt();
 }
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   /**
-  TODO:
     * Calculate a Jacobian here.
   */
   MatrixXd Hj(3,4);
+
 	//recover state parameters
-	float px = x_state(0);
-	float py = x_state(1);
-	float vx = x_state(2);
-	float vy = x_state(3);
+	double px = x_state(0);
+	double py = x_state(1);
+	double vx = x_state(2);
+	double vy = x_state(3);
 
 	//check division by zero
-	float dist2 = pow(px, 2)+pow(py, 2);
-	float dist = pow(dist2, 0.5);
-	if (dist2 < 0.0001) {
+	double dist2 = pow(px, 2)+pow(py, 2);
+	double dist = sqrt(dist2);
+  double dist15 = dist2 * dist;
+	if (isZero(dist2)) {
 	    cout << "CalculateJacobian(): Division by 0" << endl;
       return Hj;
 	}
@@ -71,24 +67,23 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	//compute the Jacobian matrix
   Hj << px/dist,  py/dist,  0, 0,
        -py/dist2, px/dist2, 0, 0,
-        py*(vx*py-vy*px)/pow(dist2, 3), px*(vy*px - vx*py)/pow(dist2, 3), px/dist, py/dist;
-
+        py*(vx*py-vy*px)/dist15, px*(vy*px - vx*py)/dist15, px/dist, py/dist;
 
 	return Hj;
 }
 
 VectorXd Tools::ConvertToCartesian(const VectorXd& x_state) {
-  float rho = x_state[0];
-  float theta = x_state[1];
-  float rho_dot = x_state[2];
+  double rho = x_state[0];
+  double theta = x_state[1];
+  double rho_dot = x_state[2];
 
-  float cos_theta = cos(theta);
-  float sin_theta = sin(theta);
+  double cos_theta = cos(theta);
+  double sin_theta = sin(theta);
 
-  float x = cos_theta * rho;
-  float y = sin_theta * rho;
-  float vx = rho_dot * cos_theta;
-  float vy = rho_dot * sin_theta;
+  double x = cos_theta * rho;
+  double y = sin_theta * rho;
+  double vx = rho_dot * cos_theta;
+  double vy = rho_dot * sin_theta;
 
   VectorXd result = VectorXd(4);
   result << x, y, vx, vy;
@@ -96,17 +91,25 @@ VectorXd Tools::ConvertToCartesian(const VectorXd& x_state) {
 }
 
 VectorXd Tools::ConvertToPolar(const VectorXd& x_state) {
-  float x = x_state[0];
-  float y = x_state[1];
-  float vx = x_state[2];
-  float vy = x_state[3];
+  double x = x_state[0];
+  double y = x_state[1];
+  double vx = x_state[2];
+  double vy = x_state[3];
 
-  float rho = sqrt(pow(x, 2) + pow(y, 2));
-  float theta = atan2(y, x);
-  cout << "Theta: " << theta *180 / 3.14169 << endl;
-  float rho_dot = (x*vx + y*vy)/rho;
+  double rho = sqrt(pow(x, 2) + pow(y, 2));
+  double theta = atan2(y, x);
+  double rho_dot = (x*vx + y*vy)/rho;
 
   VectorXd result = VectorXd(3);
   result << rho, theta, rho_dot;
   return result;
+}
+
+double Tools::rangeAngle(const double theta) {
+  double theta_rem = std::remainder(theta + M_PI, 2 * M_PI);
+  return (theta_rem >= 0 ? (theta_rem - M_PI) : (theta_rem + M_PI));
+}
+
+bool Tools::isZero(const double var2test) {
+  return (abs(var2test) < zero_threshold_ ? true : false);
 }

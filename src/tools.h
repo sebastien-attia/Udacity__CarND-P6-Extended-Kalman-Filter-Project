@@ -31,6 +31,13 @@ public:
 
   VectorXd ConvertToCartesian(const VectorXd& x_state);
   VectorXd ConvertToPolar(const VectorXd& x_state);
+
+  double rangeAngle(const double theta);
+
+  bool isZero(const double var2test);
+
+private:
+  const double zero_threshold_ = 0.000001;
 };
 
 #endif /* TOOLS_H_ */

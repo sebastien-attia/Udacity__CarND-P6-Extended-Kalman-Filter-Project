@@ -67,7 +67,7 @@ public:
 
 private:
   Tools tools;
-  void Update(const Eigen::VectorXd &z, const Eigen::VectorXd &z_pred);
+  void Update0(const Eigen::VectorXd &y);
 };
 
 #endif /* KALMAN_FILTER_H_ */

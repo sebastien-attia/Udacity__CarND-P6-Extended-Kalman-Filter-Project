@@ -3,8 +3,6 @@
 #include <iostream>
 #include "tools.h"
 
-using namespace std;
-
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
@@ -19,7 +17,6 @@ void KalmanFilter::Init(MatrixXd &H_in, MatrixXd &R_in) {
 
 void KalmanFilter::Predict() {
   /**
-  TODO:
     * predict the state
   */
   x_ = F_ * x_;
@@ -29,24 +26,25 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::Update(const VectorXd &z) {
   /**
-  TODO:
     * update the state by using Kalman Filter equations
   */
   VectorXd z_pred = H_ * x_;
-  Update(z, z_pred);
+  VectorXd y = z - z_pred;
+  Update0(y);
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
-  TODO:
     * update the state by using Extended Kalman Filter equations
   */
   VectorXd z_pred = tools.ConvertToPolar(x_);
-  Update(z, z_pred);
+  VectorXd y = z - z_pred;
+  y(1) = tools.rangeAngle(y(1));
+
+  Update0(y);
 }
 
-void KalmanFilter::Update(const VectorXd &z, const VectorXd &z_pred) {
-  VectorXd y = z - z_pred;
+void KalmanFilter::Update0(const VectorXd &y) {
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
