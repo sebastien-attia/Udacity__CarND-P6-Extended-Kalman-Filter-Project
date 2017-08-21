@@ -3,13 +3,13 @@ Self-Driving Car Engineer Nanodegree Program
 
 This repository is an implementation of the Extended Kalman Filter (EKF).
 
-** Running examples of the EKF: **
+ **Running examples of the EKF:**    
 
-![EKF on Dataset 1](images\EKF-Dataset_1.gif)
+![EKF on Dataset 1](https://github.com/sebastien-attia/Udacity__CarND-P6-Extended-Kalman-Filter-Project/blob/master/images/EKF-Dataset_1.gif)
 
-** And : **
+ **And** 
 
-![EKF on Dataset 1](images\EKF-Dataset_2.gif)
+![EKF on Dataset 1](https://github.com/sebastien-attia/Udacity__CarND-P6-Extended-Kalman-Filter-Project/blob/master/images/EKF-Dataset_2.gif)
 
 This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
 
